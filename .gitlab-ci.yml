@@ -65,9 +65,10 @@ build-image:
 
 
 deploy-to-k8-cluster:
-  image: bitnami/kubectl:latest
+  image: alpine/k8s
   stage: deploy
   before_script:
+  - *install_awscli
   - *kubectl_config
   script:
     - cat image.env

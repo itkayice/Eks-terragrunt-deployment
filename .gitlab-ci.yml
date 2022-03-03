@@ -64,8 +64,8 @@ build-image:
   - when: always
 
 
-deploy-to-k8-cluster:
-  image: alpine/k8s
+deploy-to-k8s-cluster:
+  image: alpine/k8s:1.19.15
   stage: deploy
   before_script:
   - *install_awscli

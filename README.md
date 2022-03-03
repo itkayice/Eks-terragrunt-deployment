@@ -52,6 +52,8 @@ then follow below steps to build and deploy application.
 
 - CI/CD pipeline can be pepared for both infra and application where infra will have a ci/cd pipeline with an upstream pipeline which handles deployment of latest application image
 
+![Gitlab CI/CD Pipeline Architecture](gitlab_ci_cd_architecture.png)
+
 
 ## Future updates and features
 
@@ -64,6 +66,9 @@ then follow below steps to build and deploy application.
 ## Advantages of this setup
 
 - Multi AZ EKS setup - highly available across a given region
+
+![VPC & EKS Architecture](eks_vpc_architecture.png)
+
 - Clean and unified overview of whole CI/CD pipeline on Gitlab
 - Auto-scalable & Auto rollback deployments
 - Infrastructure state maintained via Terraform remote state on S3 & Dynamo DB

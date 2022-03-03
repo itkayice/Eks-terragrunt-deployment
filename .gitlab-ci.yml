@@ -60,8 +60,8 @@ build-image:
   - echo "VERSION_IMAGE_K8S=${VERSION_IMAGE_K8S}" >> image.env
   - cat image.env
   artifacts:
-    reports:
-      dotenv: image.env
+    paths: 
+      - image.env
   rules:
   - when: always
 
@@ -73,7 +73,8 @@ deploy-to-k8s-cluster:
   - *install_awscli
   - *kubectl_config
   script:
-    - sed -i "s/ECR_REPO_IMAGE/${ECR_REPOSITORY}:latest/g" deployment.yaml
+    - source image.env
+    - sed -i "s/ECR_REPO_IMAGE/${VERSION_IMAGE_K8S}/g" deployment.yaml
     - kubectl apply -f deployment.yaml
   only:
     - main

@@ -1,0 +1,50 @@
+################################
+##  CONFIGURATION             ##
+################################
+
+variables:
+  ECR_REPOSITORY: xxx.dkr.ecr.eu-west-1.amazonaws.com/go-app-repo
+  AWS_DEFAULT_REGION: 'eu-west-1'
+  DOCKER_TLS_CERTDIR: ""
+
+
+################################
+##  CI/CD PIPELINE            ##
+################################
+
+stages:
+- build
+# - test
+# - "deploy to EKS"
+
+
+build:
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
+  services:
+    - docker:dind
+  before_script:
+    - amazon-linux-extras install docker
+    - aws --version
+    - docker --version
+  script:
+  - echo ${CI_COMMIT_REF_NAME} > VERSION
+  - export VERSION_TAG_K8s=$(echo ${CI_COMMIT_REF_NAME}_$(date +%Y%m%d_%H%M%S) | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]._-')
+  - export VERSION_IMAGE_K8S=${ECR_REPOSITORY}:${VERSION_TAG_K8s}
+  - echo ${VERSION_IMAGE_K8S}
+  - aws ecr get-login-password | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
+  - docker pull ${ECR_REPOSITORY}:latest || true
+  - docker build -t ${VERSION_IMAGE_K8S} -t ${ECR_REPOSITORY}:latest --cache-from ${ECR_REPOSITORY}:latest --network=host -f docker/fpm.Dockerfile --target px_base --build-arg ssh_gitlab="$(cat /root/.ssh/id_rsa.gitlab)" .
+  - docker push ${VERSION_IMAGE_K8S}
+  - docker push ${ECR_REPOSITORY}:latest
+  - echo "DEPLOY_VERSION=${VERSION_TAG_K8s}" >> image.env
+  - echo "VERSION_IMAGE_K8S=${VERSION_IMAGE_K8S}" >> image.env
+  - cat image.env
+  artifacts:
+    reports:
+      dotenv: image.env
+  rules:
+  - when: always
+
+

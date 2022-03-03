@@ -15,9 +15,21 @@ variables:
 ################################
 
 stages:
+- test
 - build
-# - test
-# - "deploy to EKS"
+# - deploy
+
+
+build-and-test-app:
+  stage: test
+  image: golang:alpine
+  before_script:
+    - apk add bash ca-certificates git gcc g++ libc-dev
+    - go --version
+  script:
+  - make build
+  rules:
+  - when: always
 
 build-image:
   stage: build

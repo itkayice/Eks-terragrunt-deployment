@@ -4,7 +4,7 @@
 
 variables:
   DOCKER_TLS_CERTDIR: ""
-  CLUSTER_NAME: "eks_test-cluster-SucEGSlU"
+  CLUSTER_NAME: "test-cluster-SucEGSlU"
 
 
 .install_awscli: &install_awscli |

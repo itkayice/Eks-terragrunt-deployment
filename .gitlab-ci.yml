@@ -8,7 +8,9 @@ variables:
 
 
 .install_awscli: &install_awscli |
-  apk add --no-cache curl jq python3 py-pip
+  apk add --no-cache curl python3
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  python get-pip.py pip==21.1.1
   pip install awscli --upgrade
 
 .kubectl_config: &kubectl_config

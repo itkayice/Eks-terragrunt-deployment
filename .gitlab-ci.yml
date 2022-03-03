@@ -35,7 +35,7 @@ build-image:
   - echo ${VERSION_IMAGE_K8S}
   - aws ecr get-login-password | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
   - docker pull ${ECR_REPOSITORY}:latest || true
-  - docker build -t ${VERSION_IMAGE_K8S} -t ${ECR_REPOSITORY}:latest -f ." .
+  - docker build -t ${VERSION_IMAGE_K8S} -t ${ECR_REPOSITORY}:latest .
   - docker push ${VERSION_IMAGE_K8S}
   - docker push ${ECR_REPOSITORY}:latest
   - echo "DEPLOY_VERSION=${VERSION_TAG_K8s}" >> image.env

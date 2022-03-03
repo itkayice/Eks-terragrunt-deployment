@@ -3,8 +3,6 @@
 ################################
 
 variables:
-  ECR_REPOSITORY: xxx.dkr.ecr.eu-west-1.amazonaws.com/go-app-repo
-  AWS_DEFAULT_REGION: 'eu-west-1'
   DOCKER_TLS_CERTDIR: ""
 
 
@@ -18,7 +16,8 @@ stages:
 # - "deploy to EKS"
 
 
-build:
+build-image:
+  stage: build
   image: 
     name: amazon/aws-cli
     entrypoint: [""]
@@ -46,5 +45,4 @@ build:
       dotenv: image.env
   rules:
   - when: always
-
 

@@ -25,12 +25,20 @@ Deploy app & infra from local system.
 
 Once the infra is ready you can proceed to creating and deploying application.
 
-First connect to EKS cluster using command `aws eks --region eu-west-1 update-kubeconfig --name test-cluster-SucEGSlU --profile default` then follow below steps to build and deploy application
+First connect to EKS cluster using command
+`aws eks --region <region> update-kubeconfig --name <cluster_name> --profile default`
+then follow below steps to build and deploy application.
 
 
-**Setup/Deploy Go application:**
+**Setup/Deploy Go App:**
+
 1. Build Docker image and push it to ECR repo (ECR repo link can be found in outputs of terragrunt)
-2. Deploy application and service `kubectl -f deployment.yml` and `kubectl -f service.yml`
+  - `aws ecr get-login-password --profile <default>| docker login --username AWS --password-stdin <ECR_REPOSITORY>`
+  - `docker build -t <ECR_REPOSITORY>:latest .`
+  - `docker push ${ECR_REPOSITORY}:latest`
+2. Deploy application and service
+  - `kubectl -f deployment.yml`
+  - `kubectl -f service.yml`
 
 
 **Cleanup everything:**

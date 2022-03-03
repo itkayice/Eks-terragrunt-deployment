@@ -74,7 +74,7 @@ deploy-to-k8s-cluster:
   - *kubectl_config
   script:
     - source image.env
-    - sed -i "s/ECR_REPO_IMAGE/${VERSION_IMAGE_K8S}/g" deployment.yaml
+    - sed -i "s|ECR_REPO_IMAGE|${VERSION_IMAGE_K8S}|g" deployment.yaml
     - kubectl apply -f deployment.yaml
   only:
     - main

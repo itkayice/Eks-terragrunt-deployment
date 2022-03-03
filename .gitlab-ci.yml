@@ -14,7 +14,7 @@ variables:
   pip install awscli --upgrade
 
 .kubectl_config: &kubectl_config
-- aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name ${CLUSTER_NAME}
+- aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name ${CLUSTER_NAME}
 
 ################################
 ##  CI/CD PIPELINE            ##

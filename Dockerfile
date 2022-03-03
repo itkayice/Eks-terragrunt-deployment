@@ -11,6 +11,8 @@ FROM scratch
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /go/src/app/bin /bin
 
-ENV HELLO = "HELLO"
+# Define hello env variable
+ENV HELLO="This is HELLO ENV VAR"
+
 EXPOSE 8080
 ENTRYPOINT ["/bin"]

@@ -13,6 +13,7 @@ Deploy app & infra from local system.
 4. Docker, Kubectl, Terraform & Terragrunt installed on local system
 5. Install `base-iam-authenticator` on your local system
 
+Clone the repo with https option.
 
 **Setup Infrastructure:**
 
@@ -81,7 +82,29 @@ then follow below steps to build and deploy application.
 - High maintainence - one has to always update and upgrade terrafrom and terragrunt versions
 - Solution tightly coupled with AWS and Gitlab (Prone to downtimes based on provider status)
 - High costs (you pay for Gitlab services and AWS services)
-- 
+
+
+## FAQ
+
+Incase you face error: `You must be logged in to the server (Unauthorized)`
+
+
+This happens because the user you are using to connect to the cluster is not whitelisted in configmaps to allow access. Please add the IAM users to kubernet config map using below commands.
+
+- See config map using: `kubectl -n kube-system get configmap aws-auth -o yaml`
+- Edit config map using: `kubectl -n kube-system edit configmap aws-auth`
+
+Add following section after `mapRoles`
+
+```
+  mapUsers: |
+    - userarn: arn:aws:iam::XXXXXX:user/test_user
+      username: test_user
+      groups:
+        - system:masters
+```
+
+This will let external IAM users or roles access cluster from anywhere.
 
 ## References
 

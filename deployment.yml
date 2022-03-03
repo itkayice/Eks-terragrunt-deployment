@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: xxx.dkr.ecr.eu-west-1.amazonaws.com/go-app-repo
+        image: ECR_REPO_IMAGE
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080

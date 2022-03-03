@@ -4,11 +4,15 @@
 
 variables:
   DOCKER_TLS_CERTDIR: ""
+  CLUSTER_NAME: "eks_test-cluster-SucEGSlU"
 
 
 .install_awscli: &install_awscli |
   apk add --no-cache curl jq python3 py-pip
   pip install awscli --upgrade
+
+.kubectl_config: &kubectl_config
+- aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name ${CLUSTER_NAME}
 
 ################################
 ##  CI/CD PIPELINE            ##
@@ -17,14 +21,14 @@ variables:
 stages:
 - test
 - build
-# - deploy
+- deploy
 
 
 build-and-test-app:
   stage: test
   image: golang:alpine
   before_script:
-    - apk add bash ca-certificates git gcc g++ libc-dev
+    - apk add bash ca-certificates git gcc g++ libc-dev make
     - go version
   script:
   - make build
@@ -59,3 +63,15 @@ build-image:
   rules:
   - when: always
 
+
+deploy-to-k8-cluster:
+  image: bitnami/kubectl:latest
+  stage: deploy
+  before_script:
+  - *kubectl_config
+  script:
+    - cat image.env
+    - sed -i "s/ECR_REPO_IMAGE/${VERSION_IMAGE_K8S}/g" deployment.yaml
+    - kubectl apply -f deployment.yaml
+  only:
+    - main

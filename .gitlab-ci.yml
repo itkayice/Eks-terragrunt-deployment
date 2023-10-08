@@ -35,7 +35,7 @@ build-and-test-app:
     - go version
   script:
   - cd docker-gs-ping
-  - go mod download
+  - go get -d -v
   - go build -o /docker-gs-ping
   rules:
   - when: always

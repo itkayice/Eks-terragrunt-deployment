@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: sample-go-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       name: sample-go-app
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: application
-        image: ECR_REPO_IMAGE
+        image: 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo:latest
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8080

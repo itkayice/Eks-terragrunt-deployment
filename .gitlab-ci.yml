@@ -4,7 +4,8 @@
 
 variables:
   DOCKER_TLS_CERTDIR: ""
-  CLUSTER_NAME: "test-cluster-SucEGSlU"
+  # Update cluster name
+  CLUSTER_NAME: "test-cluster-QVFPpWtx"
 
 
 .install_awscli: &install_awscli |

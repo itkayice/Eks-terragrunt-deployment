@@ -1,3 +1,9 @@
+
+locals {
+  region  = "us-west-2"
+  profile = "default-borngreat-aws-account"
+}
+
 # Configure Terragrunt to automatically store tfstate files in an S3 bucket
 remote_state {
   backend  = "s3"
@@ -13,11 +19,6 @@ remote_state {
     path      = "backend.tf"
     if_exists = "overwrite_terragrunt"
   }
-}
-
-locals {
-  region         = "eu-west-1"
-  profile = "pg-p"
 }
 
 generate "provider" {

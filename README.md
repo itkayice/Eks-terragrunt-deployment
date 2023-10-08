@@ -9,45 +9,57 @@ Deploy app & infra from local system.
 **Pre-requiste:**
 
 1. AWS Account
-2. Create IAM user download access key and secret key
-4. Docker, Kubectl, Terraform & Terragrunt installed on local system
+2. Create IAM user with administrator access policy and download its access key and secret key.
+4. Docker, Kubectl, Terraform & Terragrunt installed on local system.
 5. Install `base-iam-authenticator` on your local system
 
-Clone the repo with https option.
 
 **Setup Infrastructure:**
 
-1. Setup AWS CLI with access key and secret key
-2. Go to `infrastructure` directory and configure `profile` and `region` local variables in `terragrunt.hcl` file
-3. Initialize terragrunt setup with command `terragrunt init` (This initiate terraform S3 & dynamo db backend creation)
+1. Setup AWS CLI on local system with access key and secret key
+2. Go to `infrastructure` directory and configure `profile` and `region` local variables in `terragrunt.hcl` file.
+3. Initialize terragrunt setup with command `terragrunt init` (This initiates terraform S3 & dynamo db backend creation)
 4. Once `terragrunt init` command is executed without any error then run `terragrunt plan`
-5. Finally run `terragrunt apply` command to deploy infrastructure.
-
+5. Finally run `terragrunt apply` command to deploy infrastructure. (This will create vpc, security groups and eks cluster in AWS account)
 
 Once the infra is ready you can proceed to creating and deploying application.
 
 First connect to EKS cluster using command
-`aws eks --region <region> update-kubeconfig --name <cluster_name> --profile default`
+`aws eks --region us-west-2 update-kubeconfig --name test-cluster-QVFPpWtx --profile default-borngreat-aws-account`
 then follow below steps to build and deploy application.
 
 
 **Setup/Deploy Go App:**
 
 1. Build Docker image and push it to ECR repo (ECR repo link can be found in outputs of terragrunt)
-  - `aws ecr get-login-password --profile <default>| docker login --username AWS --password-stdin <ECR_REPOSITORY>`
-  - `docker build -t <ECR_REPOSITORY>:latest .`
-  - `docker push ${ECR_REPOSITORY}:latest`
-2. Deploy application and service
-  - `kubectl -f deployment.yml`
-  - `kubectl -f service.yml`
+  - `aws ecr get-login-password --profile default-borngreat-aws-account | docker login --username AWS --password-stdin 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo`
+  - `docker build -t 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo:latest .`
+  - `docker push 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo:latest`
+2. Deploy application and service using helm
+  - `cd helm-charts`
+  - `helm install sample-go-app sample-go-app`
+
+Note: For first time helm project you can create sample project/files using command `helm create sample-go-app`
+
+**Create Gitlab pipeline**
+
+1. Create gitlab repository
+2. Setup CI/CD vars in gitlab account
+  - Go to gitlab repository > Settings > CI/CD > Variables
+    - Setup variables for AWS Access `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_DEFAULT_REGION`.
+    - Setup ECR Repo URL variables `ECR_REPOSITORY`   
+2. Update `CLUSTER_NAME` variable in `.gitlab-ci.yml` file on local system.
+3. Upload/push all files and folder to Gitlab along with `.gitlab-ci.yml` file to the gitlab repository created this will automatically create a pipeline to build and deploy application to eks cluster.
 
 
 **Cleanup everything:**
 
-- First clean up all Kubernetes deployments/services using `kubectl delete --all services` or `kubectl delete deployment <deployment-name>`
-- Once deployments and services are cleanup then delete infrastructure using following commands:
-  - `terragrunt init`
-  - `terragrunt destroy`
+
+1. First clean up all Kubernetes deployments/services using `kubectl delete --all services` or `kubectl delete deployment <deployment-name>`
+2. Cleanup infrastrucutre
+  - Once deployments and services are cleanup then delete infrastructure using following commands:
+    - `terragrunt init`
+    - `terragrunt destroy`
 
 ## CI/CD Architecture ideas
 

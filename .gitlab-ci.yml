@@ -34,6 +34,8 @@ build-and-test-app:
     - apk add bash ca-certificates git gcc g++ libc-dev make
     - go version
   script:
+  - ls -la
+  - make initialize
   - make build
   rules:
   - when: always

@@ -34,8 +34,9 @@ build-and-test-app:
     - apk add bash ca-certificates git gcc g++ libc-dev make
     - go version
   script:
+  - cd docker-gs-ping
   - go mod download
-  - go build docker-gs-ping/main.go
+  - go build -o /docker-gs-ping
   rules:
   - when: always
 

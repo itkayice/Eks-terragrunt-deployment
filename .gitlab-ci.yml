@@ -35,7 +35,7 @@ build-and-test-app:
     - go version
   script:
   - ls -la
-  - make initialize
+  - make intialize
   - make build
   rules:
   - when: always

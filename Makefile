@@ -2,7 +2,7 @@ hello:
 	echo $(Hello)
 
 build:
-	go build src/main.go
+	go build docker-gs-ping/main.go
 
 run:
-	go run src/main.go
+	go run docker-gs-ping/main.go

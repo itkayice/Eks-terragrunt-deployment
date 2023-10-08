@@ -33,13 +33,14 @@ then follow below steps to build and deploy application.
 
 1. Build Docker image and push it to ECR repo (ECR repo link can be found in outputs of terragrunt)
   - `aws ecr get-login-password --profile default-borngreat-aws-account | docker login --username AWS --password-stdin 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo`
+  - `cd docker-gs-ping`
   - `docker build -t 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo:latest .`
   - `docker push 944365771232.dkr.ecr.us-west-2.amazonaws.com/go-app-repo:latest`
 2. Deploy application and service using helm
   - `cd helm-charts`
   - `helm install sample-go-app sample-go-app`
 
-Note: For first time helm project you can create sample project/files using command `helm create sample-go-app`
+Note: For first time helm project you can create sample project/files using command `helm create sample-go-app`.
 
 **Create Gitlab pipeline**
 
@@ -55,7 +56,8 @@ Note: For first time helm project you can create sample project/files using comm
 **Cleanup everything:**
 
 
-1. First clean up all Kubernetes deployments/services using `kubectl delete --all services` or `kubectl delete deployment <deployment-name>`
+1. First clean up all Kubernetes deployments/services
+  - go to `helm-charts` folder and run `helm uninstall sample-go-app`
 2. Cleanup infrastrucutre
   - Once deployments and services are cleanup then delete infrastructure using following commands:
     - `terragrunt init`

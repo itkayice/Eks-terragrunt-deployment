@@ -53,6 +53,7 @@ build-image:
   - export VERSION_IMAGE_K8S=${ECR_REPOSITORY}:${VERSION_TAG_K8s}
   - echo ${VERSION_IMAGE_K8S}
   - aws ecr get-login-password | docker login --username AWS --password-stdin ${ECR_REPOSITORY}
+  - cd docker-gs-ping
   - docker pull ${ECR_REPOSITORY}:latest || true
   - docker build -t ${VERSION_IMAGE_K8S} -t ${ECR_REPOSITORY}:latest .
   - docker push ${VERSION_IMAGE_K8S}
@@ -68,14 +69,15 @@ build-image:
 
 
 deploy-to-k8s-cluster:
-  image: alpine/k8s:1.19.15
+  image: alpine/helm:3.11.1
   stage: deploy
   before_script:
   - *install_awscli
   - *kubectl_config
   script:
     - source image.env
-    - sed -i "s|ECR_REPO_IMAGE|${VERSION_IMAGE_K8S}|g" deployment.yml
-    - kubectl apply -f deployment.yml
+    - cd helm-charts
+    - sed -i "s|ECR_REPO_IMAGE|${VERSION_IMAGE_K8S}|g" sample-go-app/templates/deployment.yml
+    - helm install sample-go-app sample-go-app
   only:
     - main

@@ -1,7 +1,7 @@
 
 locals {
-  region  = "us-west-2"
-  profile = "default-borngreat-aws-account"
+  region  = "us-east-1"
+  profile = "dev"
 }
 
 # Configure Terragrunt to automatically store tfstate files in an S3 bucket
@@ -9,7 +9,7 @@ remote_state {
   backend  = "s3"
   config   = {
     encrypt        = true
-    bucket         = "go-app-terragrunt-state-bucket"
+    bucket         = "go-app-terragrunt-state-bucket1234new"
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "${local.region}"
     dynamodb_table = "go-app-infra-terraform-lock"

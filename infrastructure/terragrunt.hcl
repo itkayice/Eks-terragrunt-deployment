@@ -9,7 +9,7 @@ remote_state {
   backend  = "s3"
   config   = {
     encrypt        = true
-    bucket         = "go-app-terragrunt-state-bucket1234new"
+    bucket         = "go-app-terragrunt-state-bucket-myapp1234"
     key            = "${path_relative_to_include()}/terraform.tfstate"
     region         = "${local.region}"
     dynamodb_table = "go-app-infra-terraform-lock"

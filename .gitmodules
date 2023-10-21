@@ -1,0 +1,3 @@
+[submodule "DevopsBasicsCodes"]
+	path = DevopsBasicsCodes
+	url = https://github.com/theitern/DevopsBasics.git
